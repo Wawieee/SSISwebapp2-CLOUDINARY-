@@ -4,6 +4,18 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+flask = "2.3.3"
+flask-mysql-connector = "*"
+flask-bootstrap = "*"
+flask-wtf = "*"
+python-dotenv = "*"
+authlib = "*"
+requests = "*"
+flask-oauthlib = "*"
+google-auth-oauthlib = "*"
+oauthlib = "*"
+google-auth = "*"
+requests-oauthlib = "*"
 
 [dev-packages]
 
