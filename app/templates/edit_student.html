@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Student</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-image: url("/static/students.jpg"); 
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin-top: 80px;
+        }
+        .container {
+            background-color: #e1e1e1; 
+            border-radius: 10px; 
+            padding: 20px; 
+            margin-top: 20px; 
+        }
+        h1 {
+            text-align: center;
+            color: #000000;
+            font-family: 'Times New Roman', serif;
+            font-size: 30px;
+        }
+        .form-group label {
+            font-weight: bold;
+        }
+        .form-group select, .form-group input[type="text"], .form-group input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-top: 6px;
+            margin-bottom: 16px;
+        }
+        .form-group select {
+            height: 38px;
+        }
+        .form-group select:focus, .form-group input[type="text"]:focus, .form-group input[type="number"]:focus {
+            outline: none;
+            border: 2px solid #6f42c1;
+        }
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px; /* Add margin to separate buttons from the form fields */
+        }
+        .btn-success, .btn-secondary {
+            font-size: 18px;
+            margin-right: 10px;
+        }
+        #photo-container {
+            text-align: center; /* Center the photo */
+            margin-bottom: 20px;
+        }
+        #photo-container p{
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 20px;
+            text-align: center; /* Center the photo */
+            margin: 20px;
+        }
+        #current-photo {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            border-radius: 10%; /* Make the photo circular */
+            display: block; /* Change to block for a new line after the image */
+            margin-left: auto; /* Center the image horizontally */
+            margin-right: auto;
+        }
+        #edit-photo-btn {
+            display: block; /* Change to block for a new line after the image */
+            margin: auto; /* Center the button horizontally */
+        }
+    </style>
+    <script>
+        function confirmSave() {
+            return confirm("Are you sure you want to save the changes?");
+        }
+        
+        function editPhoto() {
+            document.getElementById('photo').click();
+        }
+
+        function displayNewPhoto(input) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                document.getElementById('current-photo').src = e.target.result;
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+
+        function editPhoto() {
+            document.getElementById('photo').click();
+        }
+
+        function displayNewPhoto(input) {
+            var file = input.files[0];
+            
+            // Check if a file is selected
+            if (file) {
+                // Check file type
+                if (!file.type.startsWith('image/')) {
+                    alert('Please select a valid image file.');
+                    return;
+                }
+
+                // Check file size (1 MB limit)
+                if (file.size > 2 * 1024 * 1024) {
+                    alert('File size exceeds the limit of 1 MB. Please choose a smaller file.');
+                    return;
+                }
+
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    document.getElementById('current-photo').src = e.target.result;
+                };
+
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>   
+</head>
+<body>
+    <div class="container">
+        <h1>Edit Student</h1>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-warning text-center">
+                        <strong>{{ message }}</strong>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <form action="/edit_student/{{ student[0] }}" method="post" enctype="multipart/form-data">
+            
+            <div id="photo-container">
+                <img src="{{ student[6] }}" alt="Student Photo" id="current-photo">
+                <p>Choose image(JPEG/JPG, PNG, GIF, SVG, WEBP, BPM, etc.) only! File limit size: 2 MB</p>
+                <button type="button" class="btn btn-primary" id="edit-photo-btn" onclick="editPhoto()">Edit Photo</button>
+                <input type="file" id="photo" name="photo" accept="image/*" style="display: none;" onchange="displayNewPhoto(this)">
+            </div>
+
+            <div class="form-group">
+                <label for="id">ID:</label>
+                <input type="text" id="id" name="id" class="form-control" value="{{ student[0] }}" pattern="\d{4}-\d{4}" title="Please enter a valid ID in the format YYYY-NNNN" required>
+            </div>
+        
+
+            <div class="form-group">
+                <label for="firstname">First Name:</label>
+                <input type="text" id="firstname" name="firstname" class="form-control" value="{{ student[1] }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="lastname">Last Name:</label>
+                <input type="text" id="lastname" name="lastname" class="form-control" value="{{ student[2] }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="course_code">Course Code:</label>
+                <select id="course_code" name="course_code" class="form-control" required>
+                    {% for course in courses %}
+                        <option value="{{ course[0] }}" {% if course[0] == student[3] %}selected{% endif %}>{{ course[0] }}</option>
+                    {% endfor %}
+                </select>
+            </div>            
+
+            <div class="form-group">
+                <label for="year">Year:</label>
+                <input type="number" id="year" name="year" class="form-control" value="{{ student[4] }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="gender">Gender:</label>
+                <select id="gender" name="gender" class="form-control" required>
+                    <option value="Male" {% if student[5] == 'Male' %}selected{% endif %}>Male</option>
+                    <option value="Female" {% if student[5] == 'Female' %}selected{% endif %}>Female</option>
+                </select>
+            </div>
+
+            <div class="btn-container">
+                <input type="submit" value="Save" class="btn btn-success" onclick="return confirmSave()">
+                <a href="/students" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

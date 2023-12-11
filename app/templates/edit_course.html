@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Course</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-image: url("/static/courses.jpg"); 
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin-top: 50px;
+        }
+        .container {
+            background-color: #e1e1e1;
+            border-radius: 10px; 
+            padding: 20px; 
+            margin-top: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #000000;
+            font-family: 'Times New Roman', serif;
+            font-size: 30px;
+        }
+        .form-group label {
+            font-weight: bold;
+        }
+        .form-group select, .form-group input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-top: 6px;
+            margin-bottom: 16px;
+        }
+        .form-group select {
+            height: 38px;
+        }
+        .form-group select:focus, .form-group input[type="text"]:focus {
+            outline: none;
+            border: 2px solid #6f42c1;
+        }
+        .btn-container {
+            display: flex;
+            justify-content: center;
+        }
+        .btn-success, .btn-secondary {
+            font-size: 18px;
+            margin-right: 10px;
+        }
+    </style>
+    <script>
+        function confirmSave() {
+            return confirm("Are you sure you want to save the changes?");
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Edit Course</h1>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-warning text-center">
+                        <strong>{{ message }}</strong>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <form action="/edit_course/{{ course[0] }}" method="post">
+            <div class="form-group">
+                <label for="code">Code:</label>
+                <input type="text" id="code" name="code" class="form-control" value="{{ course[0] }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" class="form-control" value="{{ course[1] }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="college_code">College Code:</label>
+                <select id="college_code" name="college_code" class="form-control" required>
+                    {% for college in colleges %}
+                        <option value="{{ college[0] }}" {% if college[0] == course[2] %}selected{% endif %}>{{ college[0] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="btn-container">
+                <input type="submit" value="Save" class="btn btn-success" onclick="return confirmSave()">
+                <a href="/courses" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
