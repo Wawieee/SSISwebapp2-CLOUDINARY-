@@ -1,13 +1,14 @@
 from app import mysql
 import cloudinary
 
+# Update the get_students function in your Python code
+# Update the SQL query in get_students function
 def get_students():
     cur = mysql.connection.cursor()
-    cur.execute("SELECT s.*, c.name AS course_name FROM student s LEFT JOIN course c ON s.course_code = c.code")
+    cur.execute("SELECT s.*, c.name AS course_name, co.name AS college_name, co.code AS college_code FROM student s LEFT JOIN course c ON s.course_code = c.code LEFT JOIN college co ON c.college_code = co.code")
     students = cur.fetchall()
     cur.close()
     return students
-
 
 def get_courses():
     cur = mysql.connection.cursor()
@@ -80,21 +81,25 @@ def search_students(search_by, search_term):
     cur = mysql.connection.cursor()
 
     if search_by == 'id':
-        cur.execute("SELECT s.*, c.name AS course_name FROM student s LEFT JOIN course c ON s.course_code = c.code WHERE s.id LIKE %s", ('%' + search_term + '%',))
+        cur.execute("SELECT s.*, c.name AS course_name, co.name AS college_name, co.code AS college_code FROM student s LEFT JOIN course c ON s.course_code = c.code LEFT JOIN college co ON c.college_code = co.code WHERE s.id LIKE %s", ('%' + search_term + '%',))
     elif search_by == 'firstname':
-        cur.execute("SELECT s.*, c.name AS course_name FROM student s LEFT JOIN course c ON s.course_code = c.code WHERE s.firstname LIKE %s", ('%' + search_term + '%',))
+        cur.execute("SELECT s.*, c.name AS course_name, co.name AS college_name, co.code AS college_code FROM student s LEFT JOIN course c ON s.course_code = c.code LEFT JOIN college co ON c.college_code = co.code WHERE s.firstname LIKE %s", ('%' + search_term + '%',))
     elif search_by == 'lastname':
-        cur.execute("SELECT s.*, c.name AS course_name FROM student s LEFT JOIN course c ON s.course_code = c.code WHERE s.lastname LIKE %s", ('%' + search_term + '%',))
+        cur.execute("SELECT s.*, c.name AS course_name, co.name AS college_name, co.code AS college_code FROM student s LEFT JOIN course c ON s.course_code = c.code LEFT JOIN college co ON c.college_code = co.code WHERE s.lastname LIKE %s", ('%' + search_term + '%',))
     elif search_by == 'course_code':
-        cur.execute("SELECT s.*, c.name AS course_name FROM student s LEFT JOIN course c ON s.course_code = c.code WHERE s.course_code LIKE %s OR c.name LIKE %s", ('%' + search_term + '%', '%' + search_term + '%'))
+        cur.execute("SELECT s.*, c.name AS course_name, co.name AS college_name, co.code AS college_code FROM student s LEFT JOIN course c ON s.course_code = c.code LEFT JOIN college co ON c.college_code = co.code WHERE s.course_code LIKE %s OR c.name LIKE %s", ('%' + search_term + '%', '%' + search_term + '%'))
+    elif search_by == 'college_code':  # Add search option for college code
+        cur.execute("SELECT s.*, c.name AS course_name, co.name AS college_name, co.code AS college_code FROM student s LEFT JOIN course c ON s.course_code = c.code LEFT JOIN college co ON c.college_code = co.code WHERE co.code LIKE %s OR co.name LIKE %s", ('%' + search_term + '%', '%' + search_term + '%'))
     elif search_by == 'year':
-        cur.execute("SELECT s.*, c.name AS course_name FROM student s LEFT JOIN course c ON s.course_code = c.code WHERE s.year = %s", (int(search_term),))
+        cur.execute("SELECT s.*, c.name AS course_name, co.name AS college_name, co.code AS college_code FROM student s LEFT JOIN course c ON s.course_code = c.code LEFT JOIN college co ON c.college_code = co.code WHERE s.year = %s", (int(search_term),))
     elif search_by == 'gender':
-        cur.execute("SELECT s.*, c.name AS course_name FROM student s LEFT JOIN course c ON s.course_code = c.code WHERE LOWER(s.gender) = LOWER(%s)", (search_term,))
+        cur.execute("SELECT s.*, c.name AS course_name, co.name AS college_name, co.code AS college_code FROM student s LEFT JOIN course c ON s.course_code = c.code LEFT JOIN college co ON c.college_code = co.code WHERE LOWER(s.gender) = LOWER(%s)", (search_term,))
 
     students = cur.fetchall()
     cur.close()
     return students
+
+
 
 
 

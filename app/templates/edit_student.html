@@ -149,7 +149,11 @@
         <form action="/edit_student/{{ student[0] }}" method="post" enctype="multipart/form-data">
             
             <div id="photo-container">
+                {% if student[6] %}
                 <img src="{{ student[6] }}" alt="Student Photo" id="current-photo">
+            {% else %}
+                <img src="/static/profile_placeholder.png" alt="Profile Placeholder" id="current-photo">
+            {% endif %}
                 <p>Choose image(JPEG/JPG, PNG, GIF, SVG, WEBP, BPM, etc.) only! File limit size: 2 MB</p>
                 <button type="button" class="btn btn-primary" id="edit-photo-btn" onclick="editPhoto()">Edit Photo</button>
                 <input type="file" id="photo" name="photo" accept="image/*" style="display: none;" onchange="displayNewPhoto(this)">

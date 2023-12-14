@@ -17,6 +17,9 @@
             border-radius: 10px; 
             padding: 20px; 
             margin-top: 20px;
+            max-width: 1500px; /* Set a maximum width for the container */
+        margin-left: auto;
+        margin-right: auto;
         }
         h1 {
             text-align: center;
@@ -52,6 +55,7 @@
         th {
             background-color: #f8f9fa;
         }
+
     </style>
 </head>
 <body>
@@ -59,7 +63,12 @@
         <div class="header">
             <a href="/">STUDENT INFORMATION SYSTEM</a>
         </div>
-        
+        <div class="text-center">
+            <a href="/students" class="btn btn-primary btn-lg">Students</a>
+            <a href="/courses" class="btn btn-secondary btn-lg">Courses</a>
+            <a href="/colleges" class="btn btn-info btn-lg">Colleges</a>
+        </div>
+
         <h1>Students</h1>
         
         {% with messages = get_flashed_messages() %}
@@ -87,6 +96,7 @@
                     <option value="firstname">First Name</option>
                     <option value="lastname">Last Name</option>
                     <option value="course_code">Course</option>
+                    <option value="college_code">College</option>
                     <option value="year">Year</option>
                     <option value="gender">Gender</option>
                 </select>
@@ -104,6 +114,7 @@
                     <th>First Name</th>
                     <th>Last Name</th>
                     <th>Course</th>
+                    <th>College</th>
                     <th>Year</th>
                     <th>Gender</th>
                     <th>Actions</th>
@@ -131,6 +142,7 @@
                         <td class="align-middle text-center" id="firstname_{{ student[0] }}">{{ student[1] }}</td>
                         <td class="align-middle text-center" id="lastname_{{ student[0] }}">{{ student[2] }}</td>
                         <td class="align-middle text-center" id="course_code_{{ student[0] }}">{{student[7]}}({{ student[3] }})</td>
+                        <td class="align-middle text-center" id="college_{{ student[0] }}">{{ student[8] }}({{ student[9] }})</td>
                         <td class="align-middle text-center" id="year_{{ student[0] }}">{{ student[4] }}</td>
                         <td class="align-middle text-center" id="gender_{{ student[0] }}">{{ student[5] }}</td>
                         <td class="align-middle text-center">

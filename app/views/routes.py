@@ -27,19 +27,20 @@ def add_student_route():
         gender = request.form['gender']
         photo = request.files['photo']
 
-        # Check if a photo is provided
-        if not photo:
-            flash('Please upload a photo.', 'warning')
-            return render_template('add_student.html', courses=get_courses(), id=id, firstname=firstname, lastname=lastname, course_code=course_code, year=year, gender=gender)
 
         existing_student = get_student_by_id(id)
         if existing_student:
             flash(f'Student with ID {id} already exists!', 'warning')
             return render_template('add_student.html', courses=get_courses(), id=id, firstname=firstname, lastname=lastname, course_code=course_code, year=year, gender=gender)
-
-        # Upload photo to Cloudinary
-        cloudinary_response = cloudinary.uploader.upload(photo)
-        cloudinary_image_url = cloudinary_response['secure_url']
+  
+        # Check if a photo is provided
+        if photo:
+            # Upload photo to Cloudinary
+            cloudinary_response = cloudinary.uploader.upload(photo)
+            cloudinary_image_url = cloudinary_response['secure_url']
+        else:
+            # Use a placeholder photo if no photo is provided
+            cloudinary_image_url = "/static/profile_placeholder.png"
 
         add_student(id, firstname, lastname, course_code, year, gender, cloudinary_image_url)
         flash(f'Student successfully added!', 'success')

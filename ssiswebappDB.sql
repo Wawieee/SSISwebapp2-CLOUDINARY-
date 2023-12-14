@@ -22,6 +22,7 @@ CREATE TABLE student (
     course_code VARCHAR(10),
     year INT,
     gender ENUM('Male', 'Female', 'Other') NOT NULL,
+	cloudinary_image_url VARCHAR(255),
     FOREIGN KEY (course_code) REFERENCES course(code)
         ON DELETE CASCADE
         ON UPDATE CASCADE
